@@ -14,7 +14,5 @@ function RequestList({ requests, onDeleteRequest }) {
     </div>
   );
 
-
-
-  export default RequestList;
 }
+  export default RequestList;
