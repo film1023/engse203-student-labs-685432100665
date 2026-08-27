@@ -1,7 +1,9 @@
 {
   "week": "week-05",
   "title": "React Campus Service Request - LocalStorage Persistence",
+  "type": "web-output",
   "status": "ready",
+  "sourceDir": "lab05/starter",
   "sourceOrigin": "lab/week-05",
   "originalRepoUrl": "",
   "originalCommit": "",
