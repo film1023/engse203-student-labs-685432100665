@@ -75,7 +75,7 @@
     "pullRequestUrl": "https://github.com/film1023/engse203-student-labs-68543210066/pull/7",
     "submissionTag": "lab-05-submission-v1",
     "testStatus": "pass",
-    "notes": "React/Vite build output ต้องอยู่ใน publish/ ก่อนสร้าง Pages Hub",
+    "notes": "React Campus Service Request with LocalStorage Persistence",
     "pageUrl": "https://film1023.github.io/engse203-student-labs-685432100665/labs/week-05/",
     "sourceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/lab/week-05/labs/week-05/source",
     "hasPublish": false,
