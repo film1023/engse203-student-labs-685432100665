@@ -6,7 +6,7 @@
     "sourceOrigin": "main",
     "originalRepoUrl": "https://github.com/film1023/engse203-student-labs-68543210066-5/tree/main/labs/week-01/source",
     "originalCommit": "d658c621",
-    "pullRequestUrl": "https://github.com/film1023/engse203-student-labs-685432100665/pull/7",
+    "pullRequestUrl": "https://github.com/film1023/engse203-student-labs-68543210066-5/pull/1",
     "submissionTag": "lab-01-submission-v1",
     "testStatus": "pass",
     "notes": "",
@@ -68,8 +68,8 @@
     "title": "React Campus Service Request - LocalStorage Persistence",
     "type": "web-output",
     "status": "ready",
-    "sourceDir": "lab05/starter",
-    "sourceOrigin": "lab/week-05",
+    "sourceDir": "lab05/starter/src",
+    "sourceOrigin": "main",
     "originalRepoUrl": "",
     "originalCommit": "",
     "pullRequestUrl": "https://github.com/film1023/engse203-student-labs-685432100665/pull/7",
@@ -79,6 +79,6 @@
     "pageUrl": "https://film1023.github.io/engse203-student-labs-685432100665/labs/week-05/",
     "sourceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/lab/week-05/labs/week-05/source",
     "hasPublish": true,
-    "sourceEntries": 3
+    "sourceEntries": 10
   }
 ]
