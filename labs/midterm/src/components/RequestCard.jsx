@@ -1,0 +1,42 @@
+import { Link } from 'react-router-dom';
+import StatusBadge from './StatusBadge';//B4.2
+
+function RequestCard({ request, onDeleteRequest, onAcknowledge }) {
+  function handleDelete(e) {
+    e.stopPropagation();
+    if (onDeleteRequest) onDeleteRequest(request.id);
+  }
+// TODO B3.2: เพิ่มปุ่ม "รับเรื่อง" เฉพาะเมื่อสถานะเป็น pending และเรียก onAcknowledge เมื่อคลิก
+  return (
+    <article className="request-card">
+      <div>
+        <p className="request-id">{request.id}</p>
+        <h3><Link to={`/requests/${request.id}`}>{request.requestType}</Link></h3>
+        <p>{request.location}</p>
+        <p>{request.details}</p>
+        {/* TODO B4.3: แสดงสถานะของคำร้องด้วย StatusBadge */}
+        <p><StatusBadge status={request.status} /> · {request.priority}</p> 
+      </div>
+      <div className="request-card-actions">
+        {request.status === 'pending' && (
+          <button
+            type="button"
+            className="button secondary"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onAcknowledge) onAcknowledge(request.id);
+            }}
+          >
+            รับเรื่อง
+          </button>
+        )}
+
+        <button className="button danger" type="button" onClick={handleDelete}>
+          ลบ
+        </button>
+      </div>
+    </article>
+  );
+}
+
+export default RequestCard;
