@@ -58,7 +58,7 @@ function DashboardPage() {
     const matchesSearch = query === '' ||
       (request.requestType && request.requestType.toLowerCase().includes(query)) ||
       (request.location && request.location.toLowerCase().includes(query));
-
+    // B2.3
     return matchesStatus && matchesSearch;
   });
 
@@ -124,7 +124,14 @@ function DashboardPage() {
               />
             </div>
             {/* TODO B3: ส่ง onAcknowledge={handleAcknowledge} ให้ RequestList เพื่อให้การ์ด pending มีปุ่ม "รับเรื่อง" */}
-            <RequestList requests={filteredRequests} onDeleteRequest={handleDelete} />
+            {filteredRequests.length === 0 ? (
+              <p style={{ padding: '1rem 0', color: '#666' }}>ไม่พบคำร้องที่ตรงกับการค้นหา</p>
+            ) : (
+              <RequestList
+                requests={filteredRequests}
+                onDeleteRequest={handleDelete}
+              />
+            )}
           </section>
         </>
       )}
