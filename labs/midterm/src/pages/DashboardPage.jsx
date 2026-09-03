@@ -53,7 +53,6 @@ function DashboardPage() {
   const filteredRequests = requests.filter((request) => {
     // 1. เงื่อนไขตัวกรองสถานะ
     const matchesStatus = statusFilter === 'all' || request.status === statusFilter;
-
     // 2. เงื่อนไขค้นหาประเภทหรือสถานที่ (B2.2)
     const query = searchText.toLowerCase().trim();
     const matchesSearch = query === '' ||
