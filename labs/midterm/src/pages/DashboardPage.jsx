@@ -50,9 +50,18 @@ function DashboardPage() {
     completed: requests.filter((request) => request.status === 'completed').length,
   }), [requests]);
 
-  const filteredRequests = statusFilter === 'all'
-    ? requests
-    : requests.filter((request) => request.status === statusFilter);
+  const filteredRequests = requests.filter((request) => {
+    // 1. เงื่อนไขตัวกรองสถานะ
+    const matchesStatus = statusFilter === 'all' || request.status === statusFilter;
+
+    // 2. เงื่อนไขค้นหาประเภทหรือสถานที่ (B2.2)
+    const query = searchText.toLowerCase().trim();
+    const matchesSearch = query === '' ||
+      (request.requestType && request.requestType.toLowerCase().includes(query)) ||
+      (request.location && request.location.toLowerCase().includes(query));
+
+    return matchesStatus && matchesSearch;
+  });
 
   function handleRetry() {
     if (scenario) setSearchParams({});
@@ -106,6 +115,7 @@ function DashboardPage() {
               <FilterBar value={statusFilter} onFilterChange={setStatusFilter} />
             </div>
             <div className="search-bar" style={{ marginBottom: '1rem' }}>
+              {/* TODO B2: วางช่อง <input> ค้นหา ตรงนี้ (เหนือรายการ) แล้วกรองร่วมกับตัวกรองสถานะ ค้นจากประเภท/สถานที่ */}
               <input
                 type="text"
                 className="input"
@@ -113,7 +123,7 @@ function DashboardPage() {
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
               />
-            </div>{/* TODO B2: วางช่อง <input> ค้นหา ตรงนี้ (เหนือรายการ) แล้วกรองร่วมกับตัวกรองสถานะ ค้นจากประเภท/สถานที่ */}
+            </div>
             {/* TODO B3: ส่ง onAcknowledge={handleAcknowledge} ให้ RequestList เพื่อให้การ์ด pending มีปุ่ม "รับเรื่อง" */}
             <RequestList requests={filteredRequests} onDeleteRequest={handleDelete} />
           </section>
