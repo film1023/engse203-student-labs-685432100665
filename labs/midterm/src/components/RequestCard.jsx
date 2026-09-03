@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import StatusBadge from './StatusBadge';//B4.2
 
 function RequestCard({ request, onDeleteRequest, onAcknowledge }) {
   function handleDelete(e) {
@@ -13,7 +14,7 @@ function RequestCard({ request, onDeleteRequest, onAcknowledge }) {
         <h3><Link to={`/requests/${request.id}`}>{request.requestType}</Link></h3>
         <p>{request.location}</p>
         <p>{request.details}</p>
-        <p><span className={`badge ${request.status}`}>{request.status}</span> · {request.priority}</p>
+        <p><StatusBadge status={request.status} /> · {request.priority}</p>
       </div>
       <div className="request-card-actions">
         {request.status === 'pending' && (

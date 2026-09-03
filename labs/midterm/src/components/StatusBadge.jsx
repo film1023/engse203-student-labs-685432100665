@@ -1,4 +1,4 @@
-function StatusBadge({ status }) {
+function StatusBadge({ status }) {//B4.2
   const statusMap = {
     'pending': { text: 'รอดำเนินการ', className: 'badge pending' },
     'in-progress': { text: 'กำลังดำเนินการ', className: 'badge in-progress' },
