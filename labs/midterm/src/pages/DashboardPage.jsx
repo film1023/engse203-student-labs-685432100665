@@ -92,14 +92,16 @@ function DashboardPage() {
   // TODO B3.1: เพิ่มฟังก์ชัน handleAcknowledge ที่เรียก updateRequestStatus เพื่อเปลี่ยนสถานะเป็น in-progress และอัปเดตรายการคำร้อง
   async function handleAcknowledge(requestId) {
     try {
+      // เรียก updateRequestStatus เพื่อเปลี่ยนสถานะเป็น in-progress
       const nextRequests = await updateRequestStatus(requestId, 'in-progress');
+      // อัปเดตรายการคำร้องใน state
       setRequests(nextRequests);
       setNotice(`รับเรื่องคำร้อง ${requestId} แล้ว`);
     } catch (error) {
       setNotice(error instanceof Error ? error.message : 'รับเรื่องไม่สำเร็จ');
     }
   }
-  
+
   return (
     <section data-testid="page-dashboard">
       <div className="page-heading">
