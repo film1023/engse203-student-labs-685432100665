@@ -39,9 +39,12 @@
 
 | เวลา | งาน | Prompt ที่ถาม | AI ตอบว่าอะไร | ฉันทำอะไรต่อ |
 |---|---|---|---|---|
-| 4:05 | B1 | "แก้เป็นแบบนี้ใช่ไหม ฉันเพิ่ม key={key} เข้ามา" | ยืนยันว่าถูกต้อง การใส่ key={key} ช่วยแก้ Warning เรื่อง Unique Key ใน Console ของ React | นำไปรันตรวจใน Console แล้วพบว่า Warning สีเหลืองหายไปจริง |
-|  |  |  |  |  |
-|  |  |  |  |  |
+| 14:05 | B1.1 | "ทำไมขึ้นเตือน Warning: Each child in a list should have a unique 'key' prop ที่ SummaryPanel" | อธิบายเรื่อง Reconciliation และแนะนำให้เพิ่ม `key` prop ให้กับ Root Element ใน .map() | เพิ่ม key={stat.type} ที่ <article> ใน SummaryPanel.jsx · รัน npm run dev ตรวจ Console ไม่พบ Warning สีเหลืองแล้ว |
+| 14:12 | B1.2 | "ตัวเลข completed ใน SummaryPanel ไม่ตรงกับจำนวนการ์ดจริง แก้ตรงไหน" | ชี้จุดใน useMemo ว่าเงื่อนไข .filter() สะกดชื่อสถานะไม่ตรงกับ Schema Data | เปลี่ยนเงื่อนไขเป็น request.status === 'completed' ใน DashboardPage.jsx : 50 · ตรวจสอบบนหน้าจอแสดงผลเสร็จสิ้นเป็น 2 ตรงตามโจทย์ |
+| 14:20 | B1.3 | "กดปุ่ม FilterBar เปลี่ยนสถานะแล้วรายการการ์ดไม่กรองตาม" | บอกว่าใน filteredRequests มีการ Hardcode ค่า 'pending' ไว้ | แก้ไข DashboardPage.jsx : 55 ให้เปรียบเทียบกับ state statusFilter · ลองกดปุ่มตัวกรองทุกสถานะ พบว่าการ์ดเปลี่ยนตามถูกต้อง |
+| 14:30 | B1.4 | "เปลี่ยน URL Parameter เช่น REQ-101 เป็น REQ-102 แล้วข้อมูลหน้า Detail ไม่ยอมอัปเดต" | อธิบายเรื่อง Effect Lifecycle ว่าเกิดจาก Dependency Array ของ useEffect เป็น array ว่าง | เติม [requestId, reloadKey] ใน RequestDetailPage.jsx : 28 · ลองเปลี่ยน URL สลับ ID แล้วหน้าจอโหลดข้อมูลใหม่ทันที |
+| 14:40 | B1.5 | "กดลบการ์ดแล้วการ์ดหาย แต่ตัวเลขใน SummaryPanel ไม่ลดลงตาม" | อธิบายว่าตัวเลขคำนวณจาก state หลัก requests แต่ฟังก์ชันลบไม่ได้ไปอัปเดต state นั้น | สั่ง setRequests(nextRequests) ใน handleDelete (DashboardPage.jsx : 65) · ทดสอบลบการ์ดแล้วตัวเลขแผงสรุปลดลงทันที |
+| 14:50 | B1.6 | "กดปุ่มลบการ์ดแล้วหน้าพังหรือเปลี่ยนหน้าเอง เกิดจากสาเหตุอะไร" | อธิบายเรื่อง Event Bubbling จากปุ่มลบทะลุไปยัง <Link> นอกสุด และแนะนำใส่ e.stopPropagation() | เขียนฟังก์ชัน handleDelete ใน RequestCard.jsx : 16 เรียก e.stopPropagation() ก่อนลบ · ทดสอบกดลบแล้วการ์ดหาย หน้าไม่พัง |
 |  |  |  |  |  |
 |  |  |  |  |  |
 |  |  |  |  |  |
