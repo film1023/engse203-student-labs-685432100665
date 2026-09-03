@@ -17,7 +17,7 @@ function DashboardPage() {
   const [loadState, setLoadState] = useState('idle');
   const [requests, setRequests] = useState([]);
   const [statusFilter, setStatusFilter] = useState('all');
-  // TODO B2: เพิ่ม state สำหรับข้อความค้นหา ที่นี่
+  const [searchText, setSearchText] = useState('');// TODO B2: เพิ่ม state สำหรับข้อความค้นหา ที่นี่
   const [errorMessage, setErrorMessage] = useState('');
   const [notice, setNotice] = useState('');
 
@@ -60,14 +60,14 @@ function DashboardPage() {
   }
 
   async function handleDelete(requestId) {
-  try {
-    const nextRequests = await deleteRequest(requestId);
-    setRequests(nextRequests);
-    setNotice(`ลบคำร้อง ${requestId} แล้ว`);
-  } catch (error) {
-    setNotice(error instanceof Error ? error.message : 'ลบคำร้องไม่สำเร็จ');
+    try {
+      const nextRequests = await deleteRequest(requestId);
+      setRequests(nextRequests);
+      setNotice(`ลบคำร้อง ${requestId} แล้ว`);
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'ลบคำร้องไม่สำเร็จ');
+    }
   }
-}
 
 
   async function handleReset() {
@@ -105,7 +105,15 @@ function DashboardPage() {
               <h2 id="request-list-title">รายการคำร้อง</h2>
               <FilterBar value={statusFilter} onFilterChange={setStatusFilter} />
             </div>
-            {/* TODO B2: วางช่อง <input> ค้นหา ตรงนี้ (เหนือรายการ) แล้วกรองร่วมกับตัวกรองสถานะ ค้นจากประเภท/สถานที่ */}
+            <div className="search-bar" style={{ marginBottom: '1rem' }}>
+              <input
+                type="text"
+                className="input"
+                placeholder="ค้นหาจากประเภทหรือสถานที่"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+              />
+            </div>{/* TODO B2: วางช่อง <input> ค้นหา ตรงนี้ (เหนือรายการ) แล้วกรองร่วมกับตัวกรองสถานะ ค้นจากประเภท/สถานที่ */}
             {/* TODO B3: ส่ง onAcknowledge={handleAcknowledge} ให้ RequestList เพื่อให้การ์ด pending มีปุ่ม "รับเรื่อง" */}
             <RequestList requests={filteredRequests} onDeleteRequest={handleDelete} />
           </section>
