@@ -89,7 +89,7 @@ function DashboardPage() {
       setNotice(error instanceof Error ? error.message : 'คืนข้อมูลไม่สำเร็จ');
     }
   }
-  // TODO B3.1: เพิ่มฟังก์ชัน handleAcknowledge ที่เรียก updateRequestStatus เพื่อเปลี่ยนสถานะเป็น in-progress และอัปเดตรายการคำร้อง
+  // TODO B3.1,3.2: เพิ่มฟังก์ชัน handleAcknowledge ที่เรียก updateRequestStatus เพื่อเปลี่ยนสถานะเป็น in-progress และอัปเดตรายการคำร้อง
   async function handleAcknowledge(requestId) {
     try {
       // เรียก updateRequestStatus เพื่อเปลี่ยนสถานะเป็น in-progress
