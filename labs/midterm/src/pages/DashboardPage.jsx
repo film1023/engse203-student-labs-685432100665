@@ -89,7 +89,17 @@ function DashboardPage() {
       setNotice(error instanceof Error ? error.message : 'คืนข้อมูลไม่สำเร็จ');
     }
   }
-
+  // TODO B3.1: เพิ่มฟังก์ชัน handleAcknowledge ที่เรียก updateRequestStatus เพื่อเปลี่ยนสถานะเป็น in-progress และอัปเดตรายการคำร้อง
+  async function handleAcknowledge(requestId) {
+    try {
+      const nextRequests = await updateRequestStatus(requestId, 'in-progress');
+      setRequests(nextRequests);
+      setNotice(`รับเรื่องคำร้อง ${requestId} แล้ว`);
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'รับเรื่องไม่สำเร็จ');
+    }
+  }
+  
   return (
     <section data-testid="page-dashboard">
       <div className="page-heading">
@@ -124,12 +134,14 @@ function DashboardPage() {
               />
             </div>
             {/* TODO B3: ส่ง onAcknowledge={handleAcknowledge} ให้ RequestList เพื่อให้การ์ด pending มีปุ่ม "รับเรื่อง" */}
+
             {filteredRequests.length === 0 ? (
               <p style={{ padding: '1rem 0', color: '#666' }}>ไม่พบคำร้องที่ตรงกับการค้นหา</p>
             ) : (
               <RequestList
                 requests={filteredRequests}
                 onDeleteRequest={handleDelete}
+                onAcknowledge={handleAcknowledge}// B3.1เพิ่ม prop onAcknowledge ให้ RequestList เพื่อให้การ์ด pending มีปุ่ม "รับเรื่อง"
               />
             )}
           </section>
