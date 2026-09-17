@@ -1,4 +1,4 @@
-const REQUEST_TYPES = ['แจ้งซ่อม', 'บริการบัญชีผู้ใช้', 'ขอใช้อุปกรณ์', 'อื่น ๆ'];
+const REQUEST_TYPES = ['แจ้งซ่อม', 'บริการบัญชีผู้ใช้', 'ขอใช้ห้อง', 'อื่น ๆ'];
 const PRIORITIES = ['normal', 'urgent'];
 
 function readText(value) {

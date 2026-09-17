@@ -17,7 +17,11 @@ export { ApiError };
  *   ใช้ encodeURIComponent() ป้องกันอักขระพิเศษ
  */
 export async function getRequests(options = {}) {
-  throw new Error('TODO W07-F3: getRequests');
+  if (options.scenario === 'error') throw new ApiError('LAB scenario: จำลองการโหลดไม่สำเร็จ', 500);
+  if (options.scenario === 'empty') return [];
+
+  const query = options.status ? `?status=${encodeURIComponent(options.status)}` : '';
+  return apiFetch(`/api/requests${query}`);
 }
 
 /**
@@ -27,7 +31,13 @@ export async function getRequests(options = {}) {
  *   คำใบ้: จับด้วย try/catch แล้วเช็ค error.status === 404
  */
 export async function getRequestById(requestId) {
-  throw new Error('TODO W07-F4: getRequestById');
+  try {
+    return await apiFetch(`/api/requests/${encodeURIComponent(requestId)}`);
+  } catch (error) {
+    // 404 ไม่ใช่ความผิดพลาดของระบบ — แปลว่าไม่มีคำร้องรหัสนี้
+    if (error instanceof ApiError && error.status === 404) return null;
+        throw error;   // error อื่นปล่อยผ่านไปให้หน้าจอจัดการ
+  }
 }
 
 /**
@@ -36,7 +46,7 @@ export async function getRequestById(requestId) {
  * - ส่ง body ด้วย JSON.stringify(requestInput)
  */
 export async function addRequest(requestInput) {
-  throw new Error('TODO W07-F5: addRequest');
+  return apiFetch('/api/requests', { method: 'POST', body: JSON.stringify(requestInput) });
 }
 
 /**
@@ -44,7 +54,7 @@ export async function addRequest(requestInput) {
  * body: { status }
  */
 export async function updateRequestStatus(requestId, status) {
-  throw new Error('TODO W07-F6: updateRequestStatus');
+  return apiFetch(`/api/requests/${encodeURIComponent(requestId)}`, { method: 'PUT', body: JSON.stringify({ status }) });
 }
 
 /**
@@ -53,7 +63,8 @@ export async function updateRequestStatus(requestId, status) {
  *   เพื่อให้หน้าจอตรงกับข้อมูลจริงเสมอ ไม่ใช่เดาเอาเองว่าเหลืออะไร
  */
 export async function deleteRequest(requestId) {
-  throw new Error('TODO W07-F7: deleteRequest');
+  await apiFetch(`/api/requests/${encodeURIComponent(requestId)}`, { method: 'DELETE' });
+  return getRequests();   // คืนรายการล่าสุดจากเซิร์ฟเวอร์
 }
 
 /** Week 07 ยังไม่มี endpoint reset — โหลดรายการปัจจุบันกลับมาแทน */
