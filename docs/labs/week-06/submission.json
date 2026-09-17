@@ -1,0 +1,16 @@
+{
+  "week": "week-06",
+  "title": "Express API Foundation",
+  "status": "submitted",
+  "sourceOrigin": "migrated-repository",
+  "originalRepoUrl": "https://github.com/film1023/engse203-student-labs-685432100665",
+  "originalCommit": "402c4cc",
+  "pullRequestUrl": "https://github.com/film1023/engse203-student-labs-685432100665/pull/9",
+  "submissionTag": "lab-06-submission-v1",
+  "testStatus": "pass",
+  "notes": "Express API สำหรับ Lab 06 และมี API test evidence",
+  "pageUrl": "https://film1023.github.io/engse203-student-labs-685432100665/labs/week-06/",
+  "sourceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/lab/week-06/labs/week-06/source",
+  "hasPublish": false,
+  "sourceEntries": 9
+}
