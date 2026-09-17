@@ -24,6 +24,9 @@ export function createApp() {
 
   app.use('/api/requests', requestRoutes);
 
+  app.use(notFound);
+  app.use(errorHandler);
+
   /**
    * TODO W06-A2 (CP01) · route ทดสอบว่าเซิร์ฟเวอร์ทำงาน
    *   GET / → res.json({ message: 'Campus Service API is running', version: '1.0.0' })
