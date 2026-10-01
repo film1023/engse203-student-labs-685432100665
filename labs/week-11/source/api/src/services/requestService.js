@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 //   ไม่งั้น `npm run dev` (รันจาก api/) กับ checker (รันจาก root) จะหาไฟล์คนละที่
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const API_ROOT = path.resolve(HERE, '../..');
-const DB_FILE = process.env.DB_FILE ?? path.join(API_ROOT, 'data', 'campus.db');
+const DB_FILE =  process.env.DB_FILE ?? path.join(API_ROOT, 'data', 'campus.db');
 const SCHEMA_FILE = path.join(API_ROOT, 'data', 'schema.sql');
 
 let db;

@@ -1,5 +1,5 @@
-// แก้ไขบรรทัดที่ 1 ให้เป็น REQUEST_TYPES
-const REQUEST_TYPES = [ 'แจ้งซ่อม', 'บริการบัญชีผู้ใช้', 'ขอใช้อุปกรณ์', 'ขอใช้ห้อง', 'อื่นๆ' ];const PRIORITIES = ['normal', 'urgent'];
+const REQUEST_TYPES = ['แจ้งซ่อม', 'บริการบัญชีผู้ใช้', 'ขอใช้อุปกรณ์', 'อื่น ๆ'];
+const PRIORITIES = ['normal', 'urgent'];
 
 function readText(value) {
   return typeof value === 'string' ? value.trim() : '';

@@ -25,19 +25,20 @@ CREATE TABLE users (
 -- ───────────────────────────────────────────
 -- ตาราง requests — คำร้องขอใช้บริการ
 -- ───────────────────────────────────────────
-DROP TABLE IF EXISTS requests;
-
 CREATE TABLE requests (
-    id           TEXT PRIMARY KEY,
-    requester_id INTEGER NOT NULL,
-    request_type TEXT NOT NULL 
-                 CHECK (request_type IN ('แจ้งซ่อม', 'บริการบัญชีผู้ใช้', 'ขอใช้อุปกรณ์', 'ขอใช้ห้อง', 'อื่นๆ')),
-    location     TEXT NOT NULL,
-    details      TEXT NOT NULL,
-    priority     TEXT NOT NULL DEFAULT 'normal' CHECK (priority IN ('normal', 'urgent')),
-    status       TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'in-progress', 'completed')),
-    created_at   TEXT NOT NULL DEFAULT (datetime('now', 'localtime')),
-    FOREIGN KEY (requester_id) REFERENCES users(id)
+  id            TEXT PRIMARY KEY,
+  requester_id  INTEGER NOT NULL,
+  request_type  TEXT NOT NULL
+                CHECK (request_type IN ('แจ้งซ่อม','บริการบัญชีผู้ใช้','ขอใช้อุปกรณ์','อื่น ๆ')),
+  location      TEXT NOT NULL,
+  details       TEXT NOT NULL,
+  priority      TEXT NOT NULL DEFAULT 'normal'
+                CHECK (priority IN ('normal','urgent')),
+  status        TEXT NOT NULL DEFAULT 'pending'
+                CHECK (status IN ('pending','in-progress','completed')),
+  created_at    TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+
+  FOREIGN KEY (requester_id) REFERENCES users(id)
 );
 
 -- ───────────────────────────────────────────
