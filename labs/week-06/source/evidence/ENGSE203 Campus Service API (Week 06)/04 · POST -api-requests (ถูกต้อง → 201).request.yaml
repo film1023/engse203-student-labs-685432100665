@@ -1,0 +1,17 @@
+$kind: http-request
+name: 04 · POST /api/requests (ถูกต้อง → 201)
+url: "{{baseUrl}}/api/requests"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "requesterName": "ทดสอบ นักศึกษา",
+      "requestType": "แจ้งซ่อม",
+      "location": "C3-401",
+      "details": "รายละเอียดยาวพอสมควรจริง",
+      "priority": "normal"
+    }
+order: 5000

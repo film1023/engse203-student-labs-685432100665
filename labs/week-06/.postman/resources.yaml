@@ -4,4 +4,4 @@ workspace:
 
 localResources:
   collections:
-    - ../source/evidence/Campus_Service_API.postman_collection.json
+    - ../source/evidence/ENGSE203 Campus Service API (Week 06)

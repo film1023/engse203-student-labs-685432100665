@@ -1,0 +1,5 @@
+$kind: http-request
+name: 06 · DELETE /api/requests/REQ-003 (→ 204)
+url: "{{baseUrl}}/api/requests/REQ-003"
+method: DELETE
+order: 7000

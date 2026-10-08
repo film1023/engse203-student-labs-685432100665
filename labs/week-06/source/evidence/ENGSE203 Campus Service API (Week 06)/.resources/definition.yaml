@@ -1,0 +1,4 @@
+$kind: collection
+description: ยิงทดสอบ API ที่สร้างในสัปดาห์ที่ 6 · เปิดเซิร์ฟเวอร์ด้วย npm run dev ก่อน
+variables:
+  baseUrl: http://localhost:3001

@@ -1,0 +1,5 @@
+$kind: http-request
+name: 01 · GET /api/requests (ดูทั้งหมด → 200)
+url: "{{baseUrl}}/api/requests"
+method: GET
+order: 2000

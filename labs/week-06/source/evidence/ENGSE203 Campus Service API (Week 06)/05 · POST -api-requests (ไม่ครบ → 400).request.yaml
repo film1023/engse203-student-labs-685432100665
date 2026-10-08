@@ -1,0 +1,13 @@
+$kind: http-request
+name: 05 · POST /api/requests (ไม่ครบ → 400)
+url: "{{baseUrl}}/api/requests"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "requesterName": "x"
+    }
+order: 6000

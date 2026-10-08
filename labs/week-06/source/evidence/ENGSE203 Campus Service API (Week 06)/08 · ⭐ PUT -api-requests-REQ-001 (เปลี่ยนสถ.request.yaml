@@ -1,0 +1,13 @@
+$kind: http-request
+name: 08 · ⭐ PUT /api/requests/REQ-001 (เปลี่ยนสถานะ)
+url: "{{baseUrl}}/api/requests/REQ-001"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "status": "in-progress"
+    }
+order: 9000

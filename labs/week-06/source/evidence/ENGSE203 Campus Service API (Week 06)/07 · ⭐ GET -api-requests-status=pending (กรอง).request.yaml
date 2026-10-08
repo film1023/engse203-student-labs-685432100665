@@ -1,0 +1,7 @@
+$kind: http-request
+name: 07 · ⭐ GET /api/requests?status=pending (กรอง)
+url: "{{baseUrl}}/api/requests?status=pending"
+method: GET
+queryParams:
+  status: pending
+order: 8000
