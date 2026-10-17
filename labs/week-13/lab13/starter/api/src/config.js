@@ -12,10 +12,16 @@ import { fileURLToPath } from 'node:url';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const API_ROOT = path.resolve(HERE, '..');
 
+// 🏫 W13-SECRET (CP52) — production ห้ามใช้ secret สำหรับพัฒนา: ไม่ได้ตั้ง JWT_SECRET → หยุดทันที (fail fast)
+const isProd = process.env.NODE_ENV === 'production';
+if (isProd && !process.env.JWT_SECRET) {
+  throw new Error('ต้องตั้งค่า JWT_SECRET ก่อนรันแบบ production (NODE_ENV=production แต่ไม่พบ JWT_SECRET)');
+}
+
 export const config = {
   // สภาพแวดล้อม — 'development' หรือ 'production'
   env: process.env.NODE_ENV ?? 'development',
-  isProd: process.env.NODE_ENV === 'production',
+  isProd,
 
   // พอร์ตของ API
   port: Number(process.env.PORT ?? 3001),
