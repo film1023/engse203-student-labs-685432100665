@@ -14,6 +14,19 @@ export class ApiError extends Error {
   }
 }
 
+// ⭐ token ของเจ้าหน้าที่ — เก็บใน localStorage (หน้า login จะเรียก setAuthToken ใน Term Project)
+const TOKEN_KEY = 'campus.authToken';
+
+export function getAuthToken() {
+  try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
+}
+export function setAuthToken(token) {
+  try { localStorage.setItem(TOKEN_KEY, token); } catch { /* เช่น private mode — ข้ามได้ */ }
+}
+export function clearAuthToken() {
+  try { localStorage.removeItem(TOKEN_KEY); } catch { /* ข้ามได้ */ }
+}
+
 async function parseError(response) {
   try {
     const body = await response.json();
@@ -31,10 +44,16 @@ async function parseError(response) {
  */
 export async function apiFetch(path, options = {}) {
   let response;
+  const token = getAuthToken();
   try {
     response = await fetch(`${BASE_URL}${path}`, {
-      headers: { 'Content-Type': 'application/json', ...options.headers },
       ...options,
+      // แนบ Authorization: Bearer ที่นี่ที่เดียว ทุกคำขอได้ token เหมือนกันหมด
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...options.headers,
+      },
     });
   } catch {
     // fetch โยน error เมื่อต่อเซิร์ฟเวอร์ไม่ได้เลย เช่น API ไม่ได้เปิด
@@ -42,6 +61,8 @@ export async function apiFetch(path, options = {}) {
   }
 
   if (!response.ok) {
+    // token หมดอายุหรือไม่ถูกต้อง → ล้างทิ้ง ให้หน้าจอพาไป login ใหม่
+    if (response.status === 401) clearAuthToken();
     throw new ApiError(await parseError(response), response.status);
   }
 

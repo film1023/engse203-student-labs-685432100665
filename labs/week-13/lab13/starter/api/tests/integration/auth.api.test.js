@@ -2,6 +2,7 @@ import { describe, test, expect, beforeEach } from 'vitest';
 import request from 'supertest';
 import { createApp } from '../../src/app.js';
 import { loadSeed } from '../../src/services/requestService.js';
+import { resetLoginLimiter } from '../../src/routes/authRoutes.js';
 import { STAFF, loginAsStaff, tokenFor } from '../helpers/auth.js';
 
 /**
@@ -9,7 +10,7 @@ import { STAFF, loginAsStaff, tokenFor } from '../helpers/auth.js';
  * test 3 ข้อแรกให้มาแล้ว — จะ fail จนกว่าจะทำ CP50–CP51 เสร็จ (เขียน test ก่อน แล้วทำให้ผ่าน)
  */
 const app = createApp();
-beforeEach(async () => { await loadSeed(); });
+beforeEach(async () => { await loadSeed(); resetLoginLimiter(); });
 
 describe('POST /api/auth/login', () => {
   test('อีเมลและรหัสผ่านถูก → 200 พร้อม token', async () => {
@@ -49,5 +50,34 @@ describe('สิทธิ์ของ PUT / DELETE', () => {   // มีอย�
       requesterName: 'นักศึกษา ทั่วไป', requestType: 'แจ้งซ่อม', location: 'ห้อง 205',
       details: 'ไฟห้องเรียนดับสองดวง', priority: 'normal',
     }).expect(201);
+  });
+});
+
+describe('⭐ ความปลอดภัยเพิ่มเติม', () => {
+  test('ทุก response มี security headers', async () => {
+    const r = await request(app).get('/api/health');
+    expect(r.headers['x-content-type-options']).toBe('nosniff');
+    expect(r.headers['x-frame-options']).toBe('DENY');
+    expect(r.headers['referrer-policy']).toBe('no-referrer');
+  });
+
+  test('login ผิด 5 ครั้ง → ครั้งที่ 6 ได้ 429 แม้รหัสผ่านถูก', async () => {
+    for (let i = 0; i < 5; i += 1) {
+      await request(app).post('/api/auth/login').send({ ...STAFF, password: 'wrong-pass' }).expect(401);
+    }
+    const r = await request(app).post('/api/auth/login').send(STAFF);
+    expect(r.status).toBe(429);
+    expect(r.headers['retry-after']).toBeDefined();
+  });
+
+  test('login ผิด 4 ครั้งแล้วถูก → 200 และตัวนับเริ่มใหม่', async () => {
+    for (let i = 0; i < 4; i += 1) {
+      await request(app).post('/api/auth/login').send({ ...STAFF, password: 'wrong-pass' }).expect(401);
+    }
+    await request(app).post('/api/auth/login').send(STAFF).expect(200);
+    for (let i = 0; i < 4; i += 1) {
+      await request(app).post('/api/auth/login').send({ ...STAFF, password: 'wrong-pass' }).expect(401);
+    }
+    await request(app).post('/api/auth/login').send(STAFF).expect(200);
   });
 });

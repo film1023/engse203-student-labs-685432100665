@@ -7,7 +7,7 @@ services:
     runtime: node
     plan: free
     region: singapore
-    rootDir: labs/week-13/source          # โฟลเดอร์โปรเจกต์ใน Student Repository
+    rootDir: labs/week-13/lab13/starter   # โฟลเดอร์โปรเจกต์ใน Student Repository
     buildCommand: npm install && npm run build
     startCommand: npm start
     healthCheckPath: /api/health          # Render รอให้ตอบ 2xx ก่อนเปิดให้ใช้งาน
@@ -16,6 +16,9 @@ services:
         value: production
       - key: NODE_VERSION
         value: "22"                       # node:sqlite ใช้ได้ไม่ต้องใส่ flag ตั้งแต่ 22.13
+      # ⭐ ให้ Render สุ่ม secret ยาว ๆ ให้เอง — ค่าไม่อยู่ใน git · config.js ไม่ยอม start ถ้าไม่มีตอน production
+      - key: JWT_SECRET
+        generateValue: true
       # ไม่ต้องตั้ง PORT — Render กำหนดให้เอง (ค่าเริ่มต้น 10000) และ config.js อ่านจาก process.env.PORT
       # ⭐⭐ Challenge Turso — ข้อมูลถาวร (ไม่ใส่ = ใช้ campus.db ซึ่งจะรีเซ็ตทุก restart)
       #   sync: false = Render จะถามค่าในหน้า Dashboard ตอนสร้าง Blueprint · ค่าไม่ถูกเขียนลงไฟล์นี้
