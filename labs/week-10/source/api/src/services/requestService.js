@@ -1,27 +1,27 @@
-import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, existsSync } from 'node:fs';
+import { AppError } from '../middleware/errorHandler.js';
+
+/**
+ * Week 10 — service อ่าน/เขียนฐานข้อมูล SQLite (node:sqlite)
+ * ⚠ signature ของทุกฟังก์ชันเหมือน Week 07 → controller และ frontend ไม่ต้องแก้
+ * ⚠ ค่าจากผู้ใช้ส่งผ่าน ? เสมอ — ไม่ต่อ string เข้า SQL (กัน SQL injection)
+ */
 
 let db;
 
-/**
- * Week 10 — เปลี่ยน service จากอ่านไฟล์ JSON เป็นฐานข้อมูล SQLite
- *
- * ตอนนี้ยังเป็นเวอร์ชัน Week 07 (อ่านไฟล์ JSON) อยู่
- * งานของสัปดาห์นี้คือเปลี่ยนให้ใช้ node:sqlite
- *
- * ⚠ กฎเหล็ก: signature ของทุกฟังก์ชันต้องเหมือนเดิมทุกตัว
- *   → controller และ frontend จะได้ไม่ต้องแก้เลย
- */
-
-// ── ของเดิม Week 07 (อ่านไฟล์ JSON) — จะถูกแทนที่ ──
+// path อ้างจากตำแหน่งไฟล์นี้ ไม่ใช่จากที่รันคำสั่ง
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const API_ROOT = path.resolve(HERE, '../..');
-const DB_FILE = process.env.DB_FILE ?? path.join(API_ROOT, 'data', 'campus.db');
 const SCHEMA_FILE = path.join(API_ROOT, 'data', 'schema.sql');
+// อ่านตอนเรียก loadSeed() เพื่อให้ test ตั้ง DB_FILE เป็นฐานข้อมูลแยกได้
+const dbFile = () => (process.env.DB_FILE
+  ? path.resolve(process.cwd(), process.env.DB_FILE)
+  : path.join(API_ROOT, 'data', 'campus.db'));
 
+// SELECT_SHAPE เป็นโค้ดของเราเอง เขียนตายตัว — ต่อ string ได้ปลอดภัย
 const SELECT_SHAPE = `
   SELECT r.id,
          u.name          AS requesterName,
@@ -33,134 +33,107 @@ const SELECT_SHAPE = `
   FROM requests r
   JOIN users u ON u.id = r.requester_id`;
 
+/** CP32 · แปลง error จากฐานข้อมูลเป็นภาษาคน + status ที่ถูกต้อง */
+function toAppError(err) {
+  const m = err?.message ?? '';
+  if (m.includes('FOREIGN KEY')) return new AppError('อ้างถึงข้อมูลที่ไม่มีอยู่จริง', 400);
+  if (m.includes('CHECK'))       return new AppError('ค่าที่ส่งมาไม่อยู่ในรายการที่กำหนด', 400);
+  if (m.includes('NOT NULL'))    return new AppError('ข้อมูลที่จำเป็นยังไม่ครบ', 400);
+  if (m.includes('UNIQUE'))      return new AppError('ข้อมูลนี้มีอยู่แล้วในระบบ', 409);
+  return err;   // error อื่น (เช่น no such table) ปล่อยผ่าน → errorHandler ตอบ 500
+}
+
 export async function loadSeed() {
-  /**
-   * TODO W10-1 (CP26) · เปิดฐานข้อมูลด้วย node:sqlite
-   *   import { DatabaseSync } from 'node:sqlite'
-   *   - เปิดไฟล์ campus.db (จากสัปดาห์ที่ 9)
-   *   - สั่ง PRAGMA foreign_keys = ON  ⚠ สำคัญมาก
-   *   - ถ้ายังไม่มีตาราง ให้สร้างจาก schema.sql
-   *
-   * TODO W10-2 (CP27) · ⚠ path ต้องอ้างจากตำแหน่งไฟล์นี้ ไม่ใช่จากที่รันคำสั่ง
-   *   ใช้ fileURLToPath(import.meta.url) — ไม่งั้น dev กับ checker หาไฟล์คนละที่
-   */
+  if (db?.isOpen) db.close();
+  db = new DatabaseSync(dbFile());
+  db.exec('PRAGMA foreign_keys = ON');   // ⚠ ไม่เปิด = Foreign Key เงียบไม่ทำงาน
 
-db = new DatabaseSync(DB_FILE);
-db.exec('PRAGMA foreign_keys = ON');
-
-  try {
-
-    const ready = db.prepare(
+  const ready = db.prepare(
     "SELECT COUNT(*) c FROM sqlite_master WHERE type='table' AND name='requests'"
   ).get().c;
-
   if (!ready && existsSync(SCHEMA_FILE)) {
     db.exec(readFileSync(SCHEMA_FILE, 'utf8'));
-  }
-
-    //requests = JSON.parse(await readFile(DATA, 'utf8'));
-  } catch {
-   // requests = [];
   }
 }
 
 export function findAll({ status } = {}) {
-  /**
-   * TODO W10-3 (CP28) · เปลี่ยนเป็น SELECT จากฐานข้อมูล
-   *   - ใช้ JOIN กับตาราง users เพื่อคืน requesterName (ไม่ใช่ requester_id)
-   *   - ตั้งชื่อคอลัมน์ด้วย AS ให้ตรงกับที่ frontend ใช้
-   *   - ถ้ามี status ให้เติม WHERE r.status = ?
-   *   คำใบ้: คัดลอก query จาก queries.sql ที่ทำสัปดาห์ที่แล้วมาปรับ
-   */
-
-  
-
   return status
     ? db.prepare(`${SELECT_SHAPE} WHERE r.status = ? ORDER BY r.id`).all(status)
     : db.prepare(`${SELECT_SHAPE} ORDER BY r.id`).all();
 }
 
 export function findById(id) {
-  /** TODO W10-4 (CP28) · SELECT ... WHERE r.id = ?  · ไม่พบให้คืน null */
   return db.prepare(`${SELECT_SHAPE} WHERE r.id = ?`).get(id) ?? null;
 }
 
+/** ชื่อ → users.id · ถ้ายังไม่มีชื่อนี้ในระบบ สร้างผู้ใช้ใหม่ให้อัตโนมัติ */
 function resolveUserId(name) {
-  const found = db
-    .prepare('SELECT id FROM users WHERE name = ?')
-    .get(name);
-
+  const found = db.prepare('SELECT id FROM users WHERE name = ?').get(name);
   if (found) return found.id;
 
-  const slug = Date.now().toString(36);
-
+  const slug = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
   return db
-    .prepare(
-      'INSERT INTO users (name, department, email) VALUES (?, ?, ?)'
-    )
-    .run(
-      name,
-      'ไม่ระบุ',
-      `user-${slug}@rmutl.ac.th`
-    )
+    .prepare('INSERT INTO users (name, department, email) VALUES (?, ?, ?)')
+    .run(name, 'ไม่ระบุ', `user-${slug}@rmutl.ac.th`)
     .lastInsertRowid;
 }
 
 function nextId() {
-  const row = db
-    .prepare(
-      "SELECT id FROM requests WHERE id LIKE 'REQ-%' ORDER BY id DESC LIMIT 1"
-    )
-    .get();
-
-  const n = row
-    ? Number(String(row.id).replace('REQ-', '')) + 1
-    : 1;
-
-  return `REQ-${String(n).padStart(3, '0')}`;
+  // เรียงด้วยเลขจริง ไม่ใช่ข้อความ — REQ-1000 ต้องมากกว่า REQ-999
+  const row = db.prepare(
+    "SELECT MAX(CAST(SUBSTR(id, 5) AS INTEGER)) n FROM requests WHERE id LIKE 'REQ-%'"
+  ).get();
+  return `REQ-${String((row?.n ?? 0) + 1).padStart(3, '0')}`;
 }
 
 export function create(input) {
-  /**
-   * TODO W10-5 (CP29) · INSERT ลงฐานข้อมูล
-   *   ⚠ frontend ส่ง requesterName (ชื่อ) มา แต่ตารางเก็บ requester_id (ตัวเลข)
-   *   → ต้องหา id ของชื่อนั้นก่อน ถ้ายังไม่มีในระบบให้สร้าง user ใหม่
-   *   นี่คือ "หน้าที่ของ service" ที่พูดถึงในบทที่ 9 ของสัปดาห์ที่แล้ว
-   */
   const id = nextId();
-
-  db.prepare(
-    `INSERT INTO requests
-      (id, requester_id, request_type, location, details, priority)
-     VALUES (?, ?, ?, ?, ?, ?)`
-  ).run(
-    id,
-    resolveUserId(input.requesterName.trim()),
-    input.requestType,
-    input.location.trim(),
-    input.details.trim(),
-    input.priority ?? 'normal'
-  );
-
+  // ⭐ transaction — ถ้า INSERT คำร้องล้มเหลว ผู้ใช้ใหม่ที่เพิ่งสร้างต้องถูกยกเลิกด้วย
+  db.exec('BEGIN');
+  try {
+    const requesterId = resolveUserId(input.requesterName.trim());
+    db.prepare(
+      `INSERT INTO requests (id, requester_id, request_type, location, details, priority)
+       VALUES (?, ?, ?, ?, ?, ?)`
+    ).run(id, requesterId, input.requestType, input.location.trim(),
+          input.details.trim(), input.priority ?? 'normal');
+    db.exec('COMMIT');
+  } catch (err) {
+    db.exec('ROLLBACK');
+    throw toAppError(err);
+  }
   return findById(id);
 }
 
 export function updateStatus(id, status) {
-  /** TODO W10-6 (CP30) · UPDATE requests SET status = ? WHERE id = ? · ไม่พบคืน null */
-  const result = db
-    .prepare('UPDATE requests SET status = ? WHERE id = ?')
-    .run(status, id);
-
-  return result.changes ? findById(id) : null;
+  try {
+    const result = db.prepare('UPDATE requests SET status = ? WHERE id = ?').run(status, id);
+    return result.changes ? findById(id) : null;
+  } catch (err) {
+    throw toAppError(err);
+  }
 }
 
 export function remove(id) {
-  /** TODO W10-7 (CP30) · DELETE FROM requests WHERE id = ? · ไม่พบคืน null */
   const target = findById(id);
-
   if (!target) return null;
-
   db.prepare('DELETE FROM requests WHERE id = ?').run(id);
-
   return target;
+}
+
+// ── ⭐ users ──
+export function findAllUsers() {
+  return db.prepare(
+    `SELECT u.id, u.name, u.department, COUNT(r.id) AS requestCount
+     FROM users u LEFT JOIN requests r ON r.requester_id = u.id
+     GROUP BY u.id ORDER BY u.id`
+  ).all();
+}
+
+export function findUserById(id) {
+  return db.prepare('SELECT id, name, department FROM users WHERE id = ?').get(id) ?? null;
+}
+
+export function findByRequester(userId) {
+  return db.prepare(`${SELECT_SHAPE} WHERE r.requester_id = ? ORDER BY r.id`).all(userId);
 }

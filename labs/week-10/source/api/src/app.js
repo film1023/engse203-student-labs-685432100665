@@ -3,6 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import { config } from './config.js';
 import requestRoutes from './routes/requestRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
 
 export function createApp() {
@@ -12,7 +13,8 @@ export function createApp() {
   app.use(cors({ origin: config.corsOrigin }));
 
   // ② logging — dev อ่านง่าย · production กระชับสำหรับเก็บ log
-  app.use(morgan(config.isProduction ? 'combined' : 'dev'));
+  // ไม่ log ตอนรันด้วย node --test เพื่อให้ผล test อ่านง่าย
+  if (!process.env.NODE_TEST_CONTEXT) app.use(morgan(config.isProduction ? 'combined' : 'dev'));
 
   // ③ อ่าน JSON body
   app.use(express.json());
@@ -22,6 +24,7 @@ export function createApp() {
     res.json({ message: 'Campus Service API is running', version: '2.0.0' });
   });
   app.use('/api/requests', requestRoutes);
+  app.use('/api/users', userRoutes);
 
   // ⑤ ปิดท้าย
   app.use(notFound);
