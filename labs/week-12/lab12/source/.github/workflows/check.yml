@@ -1,0 +1,15 @@
+# สำเนาสำหรับกรณีที่โฟลเดอร์นี้เป็น root ของ repository เอง
+# ใน Student Repository ตัวที่ GitHub รันจริงคือ .github/workflows/week12-test.yml ที่ root ของ repo
+name: Week 12 Tests
+on: [push, workflow_dispatch]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: npm ci --prefix api
+      - run: npm ci --prefix frontend
+      - run: npm test --prefix api
+      - run: npm test --prefix frontend

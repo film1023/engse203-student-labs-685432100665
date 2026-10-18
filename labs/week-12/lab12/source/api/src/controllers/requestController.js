@@ -27,10 +27,11 @@ export function updateRequestStatus(req, res) {
     return res.status(400).json({ error: 'สถานะต้องเป็น pending, in-progress หรือ completed' });
   }
   const updated = service.updateStatus(req.params.id, status);
-  console.log(`[status] ${updated.id} → ${updated.status}`);   // บันทึกการเปลี่ยนสถานะ
+  // BUG #3 · ต้องเช็ค null ก่อนใช้ updated — เดิม log ก่อนเช็ค จึงพังด้วย TypeError กลายเป็น 500
   if (!updated) {
     return res.status(404).json({ error: `ไม่พบคำร้องรหัส ${req.params.id}` });
   }
+  console.log(`[status] ${updated.id} → ${updated.status}`);   // บันทึกการเปลี่ยนสถานะ
   res.status(200).json(updated);
 }
 
