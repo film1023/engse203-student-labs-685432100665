@@ -7,8 +7,8 @@
   "originalCommit": "",
   "pullRequestUrl": "",
   "submissionTag": "",
-  "testStatus": "check-week10: 13/23",
-  "notes": "เปลี่ยน service ให้ใช้ฐานข้อมูลจริงแทนข้อมูลในหน่วยความจำ",
+  "testStatus": "check-week10: 31/31",
+  "notes": "SQLite service · SQL injection tests · 12 API tests · /api/users",
   "sourceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-10/source",
   "evidenceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-10/source"
 }

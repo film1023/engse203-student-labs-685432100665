@@ -7,11 +7,11 @@
   "originalCommit": "",
   "pullRequestUrl": "",
   "submissionTag": "",
-  "testStatus": "check-week11: 35/41",
-  "notes": "config · health check · error handling · build สำหรับ deploy",
+  "testStatus": "check-week11: 41/41",
+  "notes": "README · production simulation · CI",
   "sourceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-11/source",
   "evidenceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-11/source",
   "pageUrl": "https://film1023.github.io/engse203-student-labs-685432100665/labs/week-11/",
   "hasPublish": false,
-  "sourceEntries": 11
+  "sourceEntries": 16
 }
