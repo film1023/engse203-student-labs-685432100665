@@ -14,7 +14,8 @@
     "build:pages": "node scripts/build-pages.mjs",
     "verify:setup": "node scripts/verify-repository.mjs --setup",
     "verify": "node scripts/verify-repository.mjs",
-    "verify:lab": "node scripts/verify-repository.mjs --week"
+    "verify:lab": "node scripts/verify-repository.mjs --week",
+    "build:demo": "node --disable-warning=ExperimentalWarning scripts/build-demo.mjs"
   },
   "dependencies": {
     "supertest": "^7.2.2"
