@@ -1,0 +1,13 @@
+# สำเนาสำหรับกรณีที่โฟลเดอร์นี้ถูกแยกเป็น repository ของตัวเอง (root = labs/week-11/source)
+# ใน Student Repository ตัวที่ทำงานจริงคือ .github/workflows/week11-check.yml ที่ root ของ repo
+name: Week 11 Check
+on: [push, workflow_dispatch]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: npm install && npm run build
+      - run: npm run check

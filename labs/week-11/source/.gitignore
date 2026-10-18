@@ -5,6 +5,8 @@ node_modules/
 .env
 .env.local
 *.local
+!.env.example
+!frontend/.env.production
 
 # build output — สร้างใหม่ได้ทุกครั้ง
 frontend/dist/
