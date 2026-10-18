@@ -1,9 +1,17 @@
 {
   "week": "week-07",
-  "title": "Upcoming Lab",
-  "status": "draft",
+  "title": "React + Express API Integration (CORS, PUT, API Contract, Tests)",
+  "status": "ready",
+  "sourceOrigin": "course-starter",
+  "originalRepoUrl": "",
+  "originalCommit": "",
+  "pullRequestUrl": "",
+  "submissionTag": "",
+  "testStatus": "pass",
+  "notes": "in-class 25/25 · take-home 8/8 · challenge 3/3 (check-week07: 36/36) · api npm test 13/13",
+  "sourceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-07/source",
+  "evidenceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-07/source/evidence",
   "pageUrl": "https://film1023.github.io/engse203-student-labs-685432100665/labs/week-07/",
-  "sourceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/lab/week-07/labs/week-07/source",
   "hasPublish": false,
-  "sourceEntries": 0
+  "sourceEntries": 8
 }

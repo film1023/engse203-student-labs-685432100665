@@ -1,0 +1,14 @@
+{
+  "week": "week-09",
+  "title": "Relational Database & SQL",
+  "status": "ready",
+  "sourceOrigin": "course-starter",
+  "originalRepoUrl": "",
+  "originalCommit": "",
+  "pullRequestUrl": "",
+  "submissionTag": "",
+  "testStatus": "check-week09: 10/30",
+  "notes": "SQL schema, seed และ queries บน SQLite",
+  "sourceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-09/lab09",
+  "evidenceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-09/lab09"
+}

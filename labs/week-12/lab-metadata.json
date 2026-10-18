@@ -1,0 +1,14 @@
+{
+  "week": "week-12",
+  "title": "Testing & Debugging",
+  "status": "ready",
+  "sourceOrigin": "course-starter",
+  "originalRepoUrl": "",
+  "originalCommit": "",
+  "pullRequestUrl": "",
+  "submissionTag": "",
+  "testStatus": "check-week12: 12/22",
+  "notes": "unit/integration test ด้วย vitest · BUG_REPORTS · DEBUG_LOG",
+  "sourceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-12/lab12/source",
+  "evidenceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-12/lab12/source"
+}

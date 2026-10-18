@@ -1,0 +1,14 @@
+{
+  "week": "week-13",
+  "title": "Secure Development & Delivery Readiness",
+  "status": "ready",
+  "sourceOrigin": "course-starter",
+  "originalRepoUrl": "",
+  "originalCommit": "",
+  "pullRequestUrl": "",
+  "submissionTag": "",
+  "testStatus": "check-week13: 22/27",
+  "notes": "auth · password hashing · CI workflow",
+  "sourceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-13/lab13/starter",
+  "evidenceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-13/lab13/starter"
+}

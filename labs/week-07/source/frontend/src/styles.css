@@ -65,3 +65,6 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
 @media (min-width:42rem) { .header-inner,.page-heading { flex-direction:row; align-items:center; } .header-inner { justify-content:space-between; } .request-card { flex-direction:row; justify-content:space-between; } }
 @media (min-width:52rem) { .summary-grid { grid-template-columns:repeat(4,minmax(0,1fr)); } .section-heading { flex-direction:row; justify-content:space-between; align-items:center; } }
 @media (prefers-reduced-motion:reduce) { .spinner { animation:none; } }
+
+.status-actions { display:flex; flex-wrap:wrap; gap:.5rem; margin:1rem 0; }
+.status-actions .button[aria-pressed="true"] { outline:2px solid currentColor; }

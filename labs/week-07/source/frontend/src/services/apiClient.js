@@ -42,13 +42,23 @@ async function parseError(response) {
  *
  * อย่าลืมส่ง header 'Content-Type': 'application/json'
  */
-export async function apiFetch(path, options = {}) {
-  //throw new Error('TODO W07-F2: apiFetch');
+// ⭐ Challenge 3 · retry อัตโนมัติ
+// retry เฉพาะ GET (ยิงซ้ำแล้วไม่สร้างข้อมูลซ้ำ) และเฉพาะ error ที่ลองใหม่แล้วมีโอกาสสำเร็จ:
+// status 0 (ต่อไม่ได้) หรือ 5xx — ไม่ retry 400/404 เพราะลองกี่ครั้งก็ได้ผลเดิม
+const RETRY_DELAYS_MS = [500, 1000, 2000];
+
+function isRetryable(error) {
+  return error instanceof ApiError && (error.status === 0 || error.status >= 500);
+}
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function fetchOnce(path, options) {
   let response;
   try {
     response = await fetch(`${BASE_URL}${path}`, {
-      headers: { 'Content-Type': 'application/json', ...options.headers },
       ...options,
+      headers: { 'Content-Type': 'application/json', ...options.headers },
     });
   } catch {
     // ① ต่อเซิร์ฟเวอร์ไม่ได้เลย — fetch โยน error
@@ -61,4 +71,18 @@ export async function apiFetch(path, options = {}) {
   }
   if (response.status === 204) return null;   // ③ DELETE สำเร็จ ไม่มี body
   return response.json();                     // ④ ปกติ
+}
+
+export async function apiFetch(path, options = {}) {
+  const method = (options.method ?? 'GET').toUpperCase();
+  const delays = method === 'GET' ? RETRY_DELAYS_MS : [];
+
+  for (let attempt = 0; ; attempt += 1) {
+    try {
+      return await fetchOnce(path, options);
+    } catch (error) {
+      if (attempt >= delays.length || !isRetryable(error)) throw error;
+      await wait(delays[attempt]);   // เว้นระยะ 500ms → 1s → 2s ไม่ยิงรัว
+    }
+  }
 }

@@ -1,0 +1,17 @@
+{
+  "week": "week-10",
+  "title": "Express API + SQLite Database",
+  "status": "ready",
+  "sourceOrigin": "course-starter",
+  "originalRepoUrl": "",
+  "originalCommit": "",
+  "pullRequestUrl": "",
+  "submissionTag": "",
+  "testStatus": "check-week10: 13/23",
+  "notes": "เปลี่ยน service ให้ใช้ฐานข้อมูลจริงแทนข้อมูลในหน่วยความจำ",
+  "sourceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-10/source",
+  "evidenceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-10/source",
+  "pageUrl": "https://film1023.github.io/engse203-student-labs-685432100665/labs/week-10/",
+  "hasPublish": false,
+  "sourceEntries": 5
+}

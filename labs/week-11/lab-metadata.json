@@ -1,0 +1,14 @@
+{
+  "week": "week-11",
+  "title": "Full-Stack Production Readiness",
+  "status": "ready",
+  "sourceOrigin": "course-starter",
+  "originalRepoUrl": "",
+  "originalCommit": "",
+  "pullRequestUrl": "",
+  "submissionTag": "",
+  "testStatus": "check-week11: 35/41",
+  "notes": "config · health check · error handling · build สำหรับ deploy",
+  "sourceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-11/source",
+  "evidenceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-11/source"
+}
