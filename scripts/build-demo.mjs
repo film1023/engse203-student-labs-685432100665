@@ -143,13 +143,6 @@ if (typeof window !== 'undefined') window.resetCampusDemo = () => { localStorage
 `;
 }
 
-function banner(mode) {
-  const msg = mode === 'demo'
-    ? 'โหมดสาธิตบน GitHub Pages — จำลอง API ในเบราว์เซอร์ ข้อมูลเก็บในเครื่องของคุณเท่านั้น · <a href="#" onclick="resetCampusDemo();return false">ล้างข้อมูลเดโม</a> · <a href="../../index.html">← LAB Portfolio</a>'
-    : `เชื่อมต่อ API จริงที่ ${apiUrl} — เปิดครั้งแรกอาจช้า 30–60 วินาที (Render free tier) · <a href="../../index.html">← LAB Portfolio</a>`;
-  return `<div style="position:sticky;top:0;z-index:9999;padding:8px 16px;background:#fff4d6;border-bottom:1px solid #e8c766;color:#5a4300;font:14px/1.5 Tahoma,sans-serif;text-align:center">${msg}</div>`;
-}
-
 for (const week of selected) {
   const cfg = LABS[week];
   if (!cfg) { console.log(`ข้าม ${week} — ไม่มีหน้าเว็บ (ใช้ evidence report)`); continue; }
@@ -165,8 +158,6 @@ for (const week of selected) {
     fs.writeFileSync(path.join(tmp, 'src/services/apiClient.js'),
       demoApiClient(week, loadSeed(appDir, cfg.seed), loadRequestTypes(appDir)), 'utf8');
   }
-  const htmlPath = path.join(tmp, 'index.html');
-  fs.writeFileSync(htmlPath, fs.readFileSync(htmlPath, 'utf8').replace(/<body([^>]*)>/, `<body$1>${banner(apiUrl ? 'api' : 'demo')}`), 'utf8');
   fs.writeFileSync(path.join(tmp, '.env.production'), `VITE_API_BASE_URL=${apiUrl}\n`, 'utf8');
 
   run(npm, ['ci', '--no-audit', '--no-fund', '--loglevel=error'], tmp);
