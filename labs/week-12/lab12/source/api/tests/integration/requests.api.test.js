@@ -110,5 +110,37 @@ describe('ข้อมูลผิดรูปแบบ', () => {
   });
 });
 
-// 🏫 TODO W12-DEBUG (CP47): regression test ของ bug จาก BUG_REPORTS.md
-//   เขียน test ที่ "ทำซ้ำอาการ" ก่อน → ต้อง fail → แก้โค้ด → test ผ่าน
+// CP47 · regression test ของ bug จาก BUG_REPORTS.md
+//   เขียน test ที่ "ทำซ้ำอาการ" ก่อน → fail → แก้โค้ด → ผ่าน → bug จะไม่กลับมาโดยไม่มีใครรู้
+describe('regression — BUG_REPORTS.md', () => {
+  test('BUG #1 · ลบรายการกลาง (REQ-002) แล้วเพิ่มใหม่ → 201 และได้รหัสที่ไม่ซ้ำ', async () => {
+    await request(app).delete('/api/requests/REQ-002').expect(204);
+    const r = await request(app).post('/api/requests').send(valid);
+    expect(r.status).toBe(201);
+    expect(r.body.id).toBe('REQ-006');
+    const all = await request(app).get('/api/requests');
+    const ids = all.body.map((x) => x.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  test('BUG #1 · ลบหลายรายการแล้วเพิ่มต่อกัน 2 ครั้ง → 201 ทั้งคู่', async () => {
+    await request(app).delete('/api/requests/REQ-001').expect(204);
+    await request(app).delete('/api/requests/REQ-004').expect(204);
+    const a = await request(app).post('/api/requests').send(valid);
+    const b = await request(app).post('/api/requests').send(valid);
+    expect([a.status, b.status]).toEqual([201, 201]);
+    expect(a.body.id).not.toBe(b.body.id);
+  });
+
+  test('BUG #3 · เปลี่ยนสถานะคำร้องที่ไม่มี → 404 (ไม่ใช่ 500)', async () => {
+    const r = await request(app).put('/api/requests/REQ-999').send({ status: 'completed' });
+    expect(r.status).toBe(404);
+    expect(r.body.error).toMatch(/ไม่พบคำร้อง/);
+  });
+
+  test('BUG #3 · คำร้องที่เพิ่งถูกลบ → PUT ได้ 404', async () => {
+    await request(app).delete('/api/requests/REQ-005').expect(204);
+    const r = await request(app).put('/api/requests/REQ-005').send({ status: 'in-progress' });
+    expect(r.status).toBe(404);
+  });
+});

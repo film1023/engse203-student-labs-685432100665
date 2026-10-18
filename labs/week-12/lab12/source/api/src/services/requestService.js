@@ -97,9 +97,12 @@ export function findById(id) {
 
 /** สร้างรหัสคำร้องถัดไป เช่น REQ-006 */
 function nextId() {
-  // รหัสถัดไป = จำนวนคำร้องที่มีอยู่ + 1  (ปรับให้เรียบง่ายขึ้นในรุ่นนี้)
-  const { total } = db.prepare('SELECT COUNT(*) AS total FROM requests').get();
-  return `REQ-${String(total + 1).padStart(3, '0')}`;
+  // รหัสถัดไป = เลขมากที่สุดที่มีอยู่ + 1  (BUG #1)
+  // เดิมใช้ COUNT(*) + 1 — พอลบรายการกลางออก จำนวนลดลง รหัสที่คำนวณได้จึงชนกับรหัสท้ายสุดที่ยังอยู่
+  const { maxNo } = db.prepare(
+    "SELECT MAX(CAST(SUBSTR(id, 5) AS INTEGER)) AS maxNo FROM requests WHERE id LIKE 'REQ-%'"
+  ).get();
+  return `REQ-${String((maxNo ?? 0) + 1).padStart(3, '0')}`;
 }
 
 /**

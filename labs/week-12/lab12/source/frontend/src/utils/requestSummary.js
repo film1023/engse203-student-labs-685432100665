@@ -9,7 +9,7 @@ export function summarizeRequests(requests) {
   return {
     total: requests.length,
     pending: count('pending'),
-    inProgress: count('in progress'),
+    inProgress: count('in-progress'),   // BUG #2 · API ใช้ขีดกลาง ไม่ใช่ช่องว่าง
     completed: count('completed'),
   };
 }

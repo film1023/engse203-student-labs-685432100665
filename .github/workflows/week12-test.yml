@@ -1,0 +1,22 @@
+name: Week 12 Tests
+on:
+  push:
+    paths:
+      - 'labs/week-12/**'
+      - '.github/workflows/week12-test.yml'
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: labs/week-12/lab12/source
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: npm ci --prefix api
+      - run: npm ci --prefix frontend
+      - run: npm test --prefix api
+      - run: npm test --prefix frontend
+      - run: npm run coverage --prefix api
