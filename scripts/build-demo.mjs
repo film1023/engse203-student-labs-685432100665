@@ -24,7 +24,8 @@ const LABS = {
   'week-07': { app: 'labs/week-07/source', seed: 'json' },
   'week-10': { app: 'labs/week-10/source', seed: 'db' },
   'week-11': { app: 'labs/week-11/source', seed: 'db' },
-  'week-12': { app: 'labs/week-12/lab12/source', seed: 'db' },
+  'week-12': { app: 'labs/week-12/lab12/source', seed: 'db',
+               liveUrl: 'https://campus-service-685432100665-week-12.onrender.com/' },
   'week-13': { app: 'labs/week-13/lab13/starter', seed: 'db', auth: true,
                liveUrl: 'https://campus-service-685432100665-week-13.onrender.com/' },
 };
