@@ -76,7 +76,7 @@ function DashboardPage() {
   return (
     <section data-testid="page-dashboard">
       <div className="page-heading">
-        <div><p className="eyebrow dark">ROUTED + PERSISTENT</p><h1>Dashboard</h1><p>ติดตามคำร้องจาก URL, Service Layer และ browser storage</p></div>
+        <div><p className="eyebrow dark">SECURE + READY TO DEPLOY</p><h1>Dashboard</h1><p>API ตรวจข้อมูล · login ด้วย JWT · จำกัดสิทธิ์ 401/403 · security headers</p></div>
         <button className="button secondary" data-testid="reset-button" type="button" onClick={handleReset}>Reset Demo Data</button>
       </div>
       {scenario && <p className="lab-scenario" role="status">LAB test scenario: {scenario}</p>}
