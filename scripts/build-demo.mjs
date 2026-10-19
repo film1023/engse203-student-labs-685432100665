@@ -31,7 +31,7 @@ const args = process.argv.slice(2);
 const apiIdx = args.indexOf('--api');
 const apiUrl = apiIdx >= 0 ? String(args[apiIdx + 1] ?? '').replace(/\/+$/, '') : '';
 if (apiIdx >= 0 && !/^https:\/\//.test(apiUrl)) throw new Error('--api ต้องเป็น URL https://...');
-const weeks = args.filter((a, i) => /^week-\d{2}$/.test(a) && i !== apiIdx + 1);
+const weeks = args.filter((a, i) => /^week-\d{2}$/.test(a) && (apiIdx < 0 || i !== apiIdx + 1));
 const selected = weeks.length ? weeks : Object.keys(LABS);
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
