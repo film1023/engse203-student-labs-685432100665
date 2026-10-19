@@ -7,8 +7,8 @@
   "originalCommit": "",
   "pullRequestUrl": "",
   "submissionTag": "",
-  "testStatus": "check-week09: 30/30",
-  "notes": "SQL schema · 10 queries · DATA_MODEL · constraint tests",
+  "testStatus": "pass",
+  "notes": "check-week09: 30/30 · SQL schema · 10 queries · DATA_MODEL · constraint tests",
   "sourceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-09/lab09",
   "evidenceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-09/lab09"
 }
