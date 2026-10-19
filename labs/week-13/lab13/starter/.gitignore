@@ -15,3 +15,5 @@ api/data/test.db
 
 .DS_Store
 *.log
+!.env.example
+!frontend/.env.production
