@@ -11,7 +11,7 @@ function AppHeader() {
     <header className="site-header">
       <div className="container header-inner">
         <div>
-          <p className="eyebrow">ENGSE203 • LAB 05</p>
+          <p className="eyebrow">ENGSE203 • LAB 10</p>
           <p className="brand">Campus Service Request</p>
         </div>
         <nav aria-label="เมนูหลัก">
