@@ -7,8 +7,8 @@
   "originalCommit": "",
   "pullRequestUrl": "",
   "submissionTag": "",
-  "testStatus": "check-week13: 27/27",
-  "notes": "Deploy จริงบน Render: https://campus-service-685432100665-week-13.onrender.com · JWT auth · 401/403 · rate limit · security headers",
+  "testStatus": "pass",
+  "notes": "check-week13: 27/27 · Deploy จริงบน Render: https://campus-service-685432100665-week-13.onrender.com · JWT auth · 401/403 · rate limit · security headers",
   "sourceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-13/lab13/starter",
   "evidenceUrl": "https://github.com/film1023/engse203-student-labs-685432100665/tree/main/labs/week-13/lab13/starter"
 }
