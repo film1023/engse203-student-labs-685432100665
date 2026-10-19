@@ -10,6 +10,7 @@
  *                                                   ต่อ API จริงที่ deploy ไว้ (API ต้องตั้ง CORS_ORIGIN=https://film1023.github.io)
  *
  * ⚠ ไม่แก้โค้ดของ LAB — คัดลอก frontend ไปโฟลเดอร์ชั่วคราว สลับ apiClient.js เฉพาะในสำเนา แล้ว build
+ * LAB ที่มี liveUrl (deploy จริงแล้ว) → publish/ เป็นหน้าส่งต่อไป URL นั้นแทนเดโม
  * เสร็จแล้วรัน: npm run build:pages
  */
 import fs from 'node:fs';
@@ -24,7 +25,8 @@ const LABS = {
   'week-10': { app: 'labs/week-10/source', seed: 'db' },
   'week-11': { app: 'labs/week-11/source', seed: 'db' },
   'week-12': { app: 'labs/week-12/lab12/source', seed: 'db' },
-  'week-13': { app: 'labs/week-13/lab13/starter', seed: 'db', auth: true },
+  'week-13': { app: 'labs/week-13/lab13/starter', seed: 'db', auth: true,
+               liveUrl: 'https://campus-service-685432100665-week-13.onrender.com/' },
 };
 
 const args = process.argv.slice(2);
@@ -164,6 +166,20 @@ for (const week of selected) {
   const cfg = LABS[week];
   if (!cfg) { console.log(`ข้าม ${week} — ไม่มีหน้าเว็บ (ใช้ evidence report)`); continue; }
   const appDir = path.join(ROOT, cfg.app);
+  if (cfg.liveUrl && !apiUrl) {
+    const target = path.join(ROOT, 'labs', week, 'publish');
+    fs.rmSync(target, { recursive: true, force: true });
+    fs.mkdirSync(target, { recursive: true });
+    const u = cfg.liveUrl.replace(/"/g, '');
+    fs.writeFileSync(path.join(target, 'index.html'), `<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${week} — กำลังเปิดระบบจริง</title><meta http-equiv="refresh" content="0; url=${u}"><link rel="canonical" href="${u}">
+<style>body{margin:0;display:grid;place-items:center;min-height:100vh;font-family:Tahoma,Arial,sans-serif;color:#10253d;background:#eef4f8}main{max-width:32rem;padding:24px;text-align:center}a{color:#075ea8}</style></head>
+<body><main><p>กำลังเปิดระบบที่ deploy จริงบน Render…</p><p>ถ้าไม่ไปเอง กด <a href="${u}">${u}</a></p><p style="color:#52677c;font-size:14px">เปิดครั้งแรกอาจช้า 30–60 วินาที (Render free tier)</p></main></body></html>
+`, 'utf8');
+    console.log(`\n✓ ${week} → ส่งต่อไป ${u}`);
+    continue;
+  }
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), `demo-${week}-`));
   console.log(`\n▶ ${week} → ${apiUrl ? 'API ' + apiUrl : 'โหมดเดโม'}`);
 
