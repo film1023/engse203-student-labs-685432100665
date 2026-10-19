@@ -24,7 +24,7 @@ const LABS = {
   'week-10': { app: 'labs/week-10/source', seed: 'db' },
   'week-11': { app: 'labs/week-11/source', seed: 'db' },
   'week-12': { app: 'labs/week-12/lab12/source', seed: 'db' },
-  'week-13': { app: 'labs/week-13/lab13/starter', seed: 'db' },
+  'week-13': { app: 'labs/week-13/lab13/starter', seed: 'db', auth: true },
 };
 
 const args = process.argv.slice(2);
@@ -62,7 +62,14 @@ function loadRequestTypes(appDir) {
   return ['แจ้งซ่อม', 'บริการบัญชีผู้ใช้', 'ขอใช้อุปกรณ์', 'อื่น ๆ'];
 }
 
-function demoApiClient(week, seed, types) {
+/** บัญชีเจ้าหน้าที่สำหรับเดโม — ใช้บัญชีทดสอบเดียวกับ tests/helpers/auth.js ของ LAB */
+function loadStaff(appDir) {
+  const p = path.join(appDir, 'api/tests/helpers/auth.js');
+  const m = fs.existsSync(p) && fs.readFileSync(p, 'utf8').match(/email:\s*'([^']+)',\s*password:\s*'([^']+)'/);
+  return m ? { email: m[1], password: m[2] } : null;
+}
+
+function demoApiClient(week, seed, types, staff) {
   return `/**
  * apiClient.js — เวอร์ชันเดโมสำหรับ GitHub Pages (สร้างโดย scripts/build-demo.mjs · ไม่ใช่โค้ดของ LAB)
  * จำลอง Express API ในเบราว์เซอร์ · ข้อมูลเก็บใน localStorage ของผู้เปิด · ตอบรูปแบบเดียวกับ API จริง
@@ -70,9 +77,11 @@ function demoApiClient(week, seed, types) {
 export class ApiError extends Error {
   constructor(message, status) { super(message); this.name = 'ApiError'; this.status = status; }
 }
-export function getAuthToken() { return null; }
-export function setAuthToken() {}
-export function clearAuthToken() {}
+const TOKEN_KEY = 'campus-demo-token';
+export function getAuthToken() { try { return localStorage.getItem(TOKEN_KEY); } catch { return null; } }
+export function setAuthToken(t) { try { localStorage.setItem(TOKEN_KEY, t); } catch { /* private mode */ } }
+export function clearAuthToken() { try { localStorage.removeItem(TOKEN_KEY); } catch { /* private mode */ } }
+const STAFF = ${JSON.stringify(staff)};   // null = LAB นี้ยังไม่มีระบบ login
 
 const KEY = 'campus-demo-${week}';
 const SEED = ${JSON.stringify(seed)};
@@ -109,6 +118,14 @@ export async function apiFetch(apiPath, options = {}) {
   const body = options.body ? JSON.parse(options.body) : undefined;
   const list = load();
 
+  if (parts[1] === 'auth' && parts[2] === 'login' && method === 'POST') {
+    if (!STAFF) throw new ApiError('ไม่พบเส้นทาง POST ' + url.pathname, 404);
+    if (!text(body?.email) || !text(body?.password)) throw new ApiError('ข้อมูลเข้าสู่ระบบไม่ถูกต้อง', 400);
+    if (body.email !== STAFF.email || body.password !== STAFF.password) throw new ApiError('อีเมลหรือรหัสผ่านไม่ถูกต้อง', 401);
+    return { token: 'demo.' + Date.now(), user: { id: 5, name: 'เจ้าหน้าที่ฝ่ายบริการ', role: 'staff' } };
+  }
+  // PUT / DELETE ต้องเข้าสู่ระบบ (เหมือน authenticate + requireRole('staff') ใน API จริง)
+  if (STAFF && (method === 'PUT' || method === 'DELETE') && !getAuthToken()) throw new ApiError('ต้องเข้าสู่ระบบก่อน', 401);
   if (parts[1] === 'health') return { status: 'ok', env: 'demo', database: { connected: true, driver: 'localStorage' } };
   if (parts[0] !== 'api' || parts[1] !== 'requests') throw new ApiError('ไม่พบเส้นทาง ' + method + ' ' + url.pathname, 404);
   const id = parts[2] ? decodeURIComponent(parts[2]) : null;
@@ -156,9 +173,11 @@ for (const week of selected) {
   });
   if (!apiUrl) {
     fs.writeFileSync(path.join(tmp, 'src/services/apiClient.js'),
-      demoApiClient(week, loadSeed(appDir, cfg.seed), loadRequestTypes(appDir)), 'utf8');
+      demoApiClient(week, loadSeed(appDir, cfg.seed), loadRequestTypes(appDir), cfg.auth ? loadStaff(appDir) : null), 'utf8');
   }
-  fs.writeFileSync(path.join(tmp, '.env.production'), `VITE_API_BASE_URL=${apiUrl}\n`, 'utf8');
+  const staff = cfg.auth && !apiUrl ? loadStaff(appDir) : null;
+  const hint = staff ? `VITE_DEMO_LOGIN_HINT=${staff.email} / ${staff.password}\n` : '';
+  fs.writeFileSync(path.join(tmp, '.env.production'), `VITE_API_BASE_URL=${apiUrl}\n${hint}`, 'utf8');
 
   run(npm, ['ci', '--no-audit', '--no-fund', '--loglevel=error'], tmp);
   run(process.execPath, [path.join(tmp, 'node_modules/vite/bin/vite.js'), 'build', '--logLevel', 'warn'], tmp, { NODE_ENV: 'production' });

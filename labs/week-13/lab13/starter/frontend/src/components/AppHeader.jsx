@@ -4,6 +4,7 @@ const links = [
   ['/', 'Dashboard'],
   ['/requests/new', 'New Request'],
   ['/about', 'About'],
+  ['/login', 'เจ้าหน้าที่'],
 ];
 
 function AppHeader() {
