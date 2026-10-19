@@ -80,7 +80,7 @@ function DashboardPage() {
   return (
     <section data-testid="page-dashboard">
       <div className="page-heading">
-        <div><p className="eyebrow dark">ROUTED + PERSISTENT</p><h1>Dashboard</h1><p>ติดตามคำร้องจาก URL, Service Layer และ browser storage</p></div>
+        <div><p className="eyebrow dark">FULL-STACK · PRODUCTION READY</p><h1>Dashboard</h1><p>React + Express + SQLite ในพอร์ตเดียว · มี health check และพร้อม deploy</p></div>
         <button className="button secondary" data-testid="reset-button" type="button" onClick={handleReset}>Reset Demo Data</button>
       </div>
       {scenario && <p className="lab-scenario" role="status">LAB test scenario: {scenario}</p>}
